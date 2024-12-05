@@ -102,7 +102,7 @@ export class NoLagClient implements INoLagClient {
    */
   connect(): Promise<NoLagClient> {
     this.connectionStatus = EConnectionStatus.Idle;
-    this.isBrowser() ? this.browserInstance() : this.nodeInstance();
+    this.browserInstance();
     return new Promise((resolve, reject) => {
       const checkConnection = setInterval(() => {
         if (this.connectionStatus === EConnectionStatus.Connected) {
@@ -169,31 +169,31 @@ export class NoLagClient implements INoLagClient {
    * Node WebSocket connection with package "ws"
    */
   nodeInstance() {
-    import("ws").then((loadedWebSocketNode) => {
-      const WebSocketNode = loadedWebSocketNode.default;
-
-      this.environment = EEnvironment.Nodejs;
-
-      // prevent the re-initiation of a socket connection when the
-      // reconnect function calls this method again
-      if (this.connectionStatus === EConnectionStatus.Connected) {
-        return;
-      }
-
-      this.wsInstance = new WebSocketNode(
-        `${this.protocol}://${this.host}${this.url}`,
-      );
-
-      this.wsInstance.on("open", (event: any) => {
-        this._onOpen(event);
-      });
-      this.wsInstance.on("message", (event: any) => {
-        this._onReceive(event);
-      });
-      this.wsInstance.on("close", (event: any) => {
-        this._onError(event);
-      });
-    });
+    // import("ws").then((loadedWebSocketNode) => {
+    //   const WebSocketNode = loadedWebSocketNode.default;
+    //
+    //   this.environment = EEnvironment.Nodejs;
+    //
+    //   // prevent the re-initiation of a socket connection when the
+    //   // reconnect function calls this method again
+    //   if (this.connectionStatus === EConnectionStatus.Connected) {
+    //     return;
+    //   }
+    //
+    //   this.wsInstance = new WebSocketNode(
+    //     `${this.protocol}://${this.host}${this.url}`,
+    //   );
+    //
+    //   this.wsInstance.on("open", (event: any) => {
+    //     this._onOpen(event);
+    //   });
+    //   this.wsInstance.on("message", (event: any) => {
+    //     this._onReceive(event);
+    //   });
+    //   this.wsInstance.on("close", (event: any) => {
+    //     this._onError(event);
+    //   });
+    // });
   }
 
   authenticate() {
