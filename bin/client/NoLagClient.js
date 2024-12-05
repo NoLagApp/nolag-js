@@ -1,27 +1,4 @@
 "use strict";
-var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    var desc = Object.getOwnPropertyDescriptor(m, k);
-    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
-      desc = { enumerable: true, get: function() { return m[k]; } };
-    }
-    Object.defineProperty(o, k2, desc);
-}) : (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    o[k2] = m[k];
-}));
-var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
-    Object.defineProperty(o, "default", { enumerable: true, value: v });
-}) : function(o, v) {
-    o["default"] = v;
-});
-var __importStar = (this && this.__importStar) || function (mod) {
-    if (mod && mod.__esModule) return mod;
-    var result = {};
-    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
-    __setModuleDefault(result, mod);
-    return result;
-};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.NoLagClient = void 0;
 const constants_1 = require("../shared/constants");
@@ -103,7 +80,7 @@ class NoLagClient {
      */
     connect() {
         this.connectionStatus = enum_1.EConnectionStatus.Idle;
-        this.isBrowser() ? this.browserInstance() : this.nodeInstance();
+        this.browserInstance();
         return new Promise((resolve, reject) => {
             const checkConnection = setInterval(() => {
                 if (this.connectionStatus === enum_1.EConnectionStatus.Connected) {
@@ -159,25 +136,31 @@ class NoLagClient {
      * Node WebSocket connection with package "ws"
      */
     nodeInstance() {
-        Promise.resolve().then(() => __importStar(require("ws"))).then((loadedWebSocketNode) => {
-            const WebSocketNode = loadedWebSocketNode.default;
-            this.environment = enum_1.EEnvironment.Nodejs;
-            // prevent the re-initiation of a socket connection when the
-            // reconnect function calls this method again
-            if (this.connectionStatus === enum_1.EConnectionStatus.Connected) {
-                return;
-            }
-            this.wsInstance = new WebSocketNode(`${this.protocol}://${this.host}${this.url}`);
-            this.wsInstance.on("open", (event) => {
-                this._onOpen(event);
-            });
-            this.wsInstance.on("message", (event) => {
-                this._onReceive(event);
-            });
-            this.wsInstance.on("close", (event) => {
-                this._onError(event);
-            });
-        });
+        // import("ws").then((loadedWebSocketNode) => {
+        //   const WebSocketNode = loadedWebSocketNode.default;
+        //
+        //   this.environment = EEnvironment.Nodejs;
+        //
+        //   // prevent the re-initiation of a socket connection when the
+        //   // reconnect function calls this method again
+        //   if (this.connectionStatus === EConnectionStatus.Connected) {
+        //     return;
+        //   }
+        //
+        //   this.wsInstance = new WebSocketNode(
+        //     `${this.protocol}://${this.host}${this.url}`,
+        //   );
+        //
+        //   this.wsInstance.on("open", (event: any) => {
+        //     this._onOpen(event);
+        //   });
+        //   this.wsInstance.on("message", (event: any) => {
+        //     this._onReceive(event);
+        //   });
+        //   this.wsInstance.on("close", (event: any) => {
+        //     this._onError(event);
+        //   });
+        // });
     }
     authenticate() {
         this.connectionStatus = enum_1.EConnectionStatus.Connecting;

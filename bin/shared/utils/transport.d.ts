@@ -10,7 +10,7 @@ export interface INqlTransport {
     decode(data: Uint8Array): IDecode;
 }
 export declare class NqlTransport {
-    static encode(TransportCommands: TransportCommands, payload?: ArrayBuffer): ArrayBufferLike;
+    static encode(TransportCommands: TransportCommands, payload?: ArrayBuffer): ArrayBuffer;
     static decode(transport: ArrayBuffer): IDecode;
     static hasSeparatorIndexes(commandAction: number[]): boolean;
     static commandActionUint8ArrayToString(commandActionArray: number[]): string;
